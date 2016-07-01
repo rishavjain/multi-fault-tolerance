@@ -1,0 +1,8 @@
+global Region
+
+Region = struct();
+
+Region.LowStartPoint = nan;
+Region.HighStartPoint = nan;
+Region.Width = nan;
+Region
