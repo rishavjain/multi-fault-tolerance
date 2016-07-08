@@ -19,7 +19,7 @@ params.env.path = [0 0;
 params.env.inflationSize = 5;
 
 path = params.env.path;
-hPath = plot(path(1,:), path(2,:), 'g', 'LineWidth', 4);
+hPath = patchline(path(1,:), path(2,:), 'LineWidth', 4, 'EdgeColor', 'g', 'EdgeAlpha', 0.2);
     
 envRegions = inflate_path(params);
 

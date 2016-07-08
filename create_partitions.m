@@ -55,6 +55,7 @@ for iAgent = 1:nAgents
     
     vMarker = vMarker + vLength;
     
+    %{
     %%%----------TESTING----------------------------------------------------
     figure(1);
     hold on;
@@ -72,7 +73,7 @@ for iAgent = 1:nAgents
     plot(partition(:,1), partition(:,2));
     
     tmpmeshx = vMarker-vLength:vMarker;
-    tmpmeshy = ones(size(tmpmeshx)) .* vHeight*0.5;
+    tmpmeshy = ones(size(tmpmeshx)) .* vHeight*0.35;
     
     if ~exist('tmpn', 'var')
     tmpn = 1;
@@ -90,24 +91,25 @@ for iAgent = 1:nAgents
             %             figure(1)
             %             text(pt(1), pt(2), num2str(tmpn), 'HorizontalAlignment', 'center');
             
+            if isequal(regions(regionIndex).type, 'turn')
             if abs(pt(1) - revmappedX) > 1e-5 || abs(pt(2) - revmappedY) > 1e-5
-                %                 error 'mapping and reverse mapping not matched'
-                logger(params, 1, sprintf('incorrect region:%d [%3d %3d] <--> [%3d %3d]', regionIndex, pt, revmappedX, revmappedY));
+                logger(params, 3, sprintf('incorrect reverse mapping, region:%d [%3d %3d] <--> [%3d %3d]', regionIndex, pt, revmappedX, revmappedY));
             else
                 logger(params, 1, sprintf('correct region:%d [%3d %3d] <--> [%3d %3d]', regionIndex, pt, revmappedX, revmappedY));
+            end
             end
             
             figure(2)
             text(mappedX, mappedY, num2str(tmpn), 'HorizontalAlignment', 'center', 'FontSize', 5);
             
-            tmpn = tmpn + 1;
-        
+            tmpn = tmpn + 1;        
     end
     
 %     if iAgent == 2
 %         break;
 %     end
     %%%------------------------------------------------------------------------
+    %}
 end
 
 end

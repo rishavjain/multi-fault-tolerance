@@ -159,8 +159,43 @@ classdef turnregion < region
         end
         
         function [x, y] = revMapVPt(obj, x_, y_, mapping)
-            x = 0;
-            y = 0;
+            actualXScale = pdist([obj.s1; obj.s2]) + pdist([obj.e1; obj.e2]);
+            virtualXScale = mapping(2) - mapping(1);
+            
+            if isequal(obj.pivotPoint, obj.s1)
+                s1 = obj.s1;
+                s2 = obj.s2;
+                e2 = obj.e2;
+            elseif isequal(obj.pivotPoint, obj.s2)
+                s1 = obj.s2;
+                s2 = obj.s1;
+                e2 = obj.e1;
+            else
+                error 'pivot pt does not match any starting point'
+            end
+            
+            D = obj.extraDrawPoint;
+            
+            [~, refTheta] = vec_diff(D, s1);
+            [len1, theta1] = vec_diff([x_ y_], s1);
+            [len2, theta2] = vec_diff(s2, s1);
+            
+            if (theta1 - refTheta)*(theta2 - refTheta) > 0
+                theta = acos(dot(([x_ y_] - s1), (s2 - s1))/(len1 * len2)); 
+                
+                x = mapping(1) + (len2 * tan(theta) / (actualXScale / virtualXScale));
+            else
+                [len3, theta3] = vec_diff(s2, s1);
+                theta = acos(dot(([x_ y_] - s1), (e2 - s1))/(len1 * len3));
+                
+                x = mapping(1) + ((len2 + len3 - len2*tan(theta)) / (actualXScale / virtualXScale));
+            end
+            
+            y = len1 * cos(theta);
+            
+            if isequal(obj.pivotPoint, obj.s2)
+                y = len2 - y;
+            end
         end
         
         function handle = draw_polygon(obj, color, alpha, edge)
