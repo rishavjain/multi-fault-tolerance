@@ -12,7 +12,6 @@ params.log.level = 1;
 %% code initialize
 params.openFileIds = [];
 
-addpath(genpath('.'));
 resetfigure(params);
 
 end

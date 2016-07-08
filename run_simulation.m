@@ -1,4 +1,4 @@
-
+addpath(genpath('.'));
 params = initialize();
 
 params.agents.num = 20;
