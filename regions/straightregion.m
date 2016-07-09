@@ -1,7 +1,7 @@
 classdef straightregion < region
     %STRAIGHTREGION Summary of this class goes here
     %   Detailed explanation goes here
-        
+    
     properties
         length
         width
@@ -52,18 +52,13 @@ classdef straightregion < region
             y = dot(([x_ y_] - obj.s1),(obj.s2 - obj.s1))/sqrt((obj.s2 - obj.s1)*(obj.s2 - obj.s1)');
         end
         
-        function handle = draw_polygon(obj, color, alpha)
-            if ~exist('color', 'var')
-                color = 'w';
-            end
-            
-            if ~exist('alpha', 'var')
-                alpha = 0.2;
-            end
-            
-            handle = fill(obj.polygon(:,1), obj.polygon(:,2), color, 'FaceAlpha', alpha, 'EdgeColor', 'None');
-            plot(obj.polygon(1:2,1), obj.polygon(1:2,2), 'k');
-            plot(obj.polygon(3:4,1), obj.polygon(3:4,2), 'k');
+        function handle = draw_polygon(obj)
+            %                 color = 'w';
+            %                 alpha = 0.2;
+            %
+            %             handle(1) = fill(obj.polygon(:,1), obj.polygon(:,2), color, 'FaceAlpha', alpha, 'EdgeColor', 'None');
+            handle(1) = plot(obj.polygon(1:2,1), obj.polygon(1:2,2), 'k');
+            handle(2) = plot(obj.polygon(3:4,1), obj.polygon(3:4,2), 'k');
         end
     end
     

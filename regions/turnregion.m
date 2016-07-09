@@ -198,28 +198,19 @@ classdef turnregion < region
             end
         end
         
-        function handle = draw_polygon(obj, color, alpha, edge)
-            if ~exist('color', 'var')
-                color = 'w';
-            end
-            
-            if ~exist('alpha', 'var')
-                alpha = 0.2;
-            end
-            
-            if ~exist('edge', 'var')
-                edge = 'None';
-            end
-            
-            handle = fill(obj.polygon(:,1), obj.polygon(:,2), color, 'FaceAlpha', alpha, 'EdgeColor', edge);
+        function handle = draw_polygon(obj)
+            %             color = 'w';
+            %             alpha = 0.2;
+            %             edge = 'None';
+            %
+            %             handle = fill(obj.polygon(:,1), obj.polygon(:,2), color, 'FaceAlpha', alpha, 'EdgeColor', edge);
             
             if isequal(obj.s1,obj.pivotPoint)
-                plot(obj.polygon(3:4,1), obj.polygon(3:4,2), 'k');
-                plot(obj.polygon(4:5,1), obj.polygon(4:5,2), 'k');
+                handle(1) = plot(obj.polygon(3:4,1), obj.polygon(3:4,2), 'k');
+                handle(2) = plot(obj.polygon(4:5,1), obj.polygon(4:5,2), 'k');
             elseif isequal(obj.s2,obj.pivotPoint)
-                plot(obj.polygon(1:2,1), obj.polygon(1:2,2), 'k');
-                plot(obj.polygon(2:3,1), obj.polygon(2:3,2), 'k');
-                
+                handle(1) = plot(obj.polygon(1:2,1), obj.polygon(1:2,2), 'k');
+                handle(2) = plot(obj.polygon(2:3,1), obj.polygon(2:3,2), 'k');
             end
         end
     end

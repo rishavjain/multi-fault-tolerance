@@ -8,4 +8,6 @@ if exist('params', 'var')
     fprintf(params.log.fileId, '\n');
 end
 
+clear functions;
+
 end

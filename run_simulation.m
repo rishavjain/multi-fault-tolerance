@@ -1,39 +1,59 @@
-addpath(genpath('.'));
-params = initialize();
+params = config();
 
-params.agents.num = 20;
-
-params.env.path = [0 0;
-    20 0;
-    20 15;
-    -15 15;
-    -15 -15;
-    20 -15;
-    20 -35;
-    0 -35;
-%     10 -25;
-%     0 -25;
-%     0 -35;
-    ]';
-
-params.env.inflationSize = 5;
-
-path = params.env.path;
-hPath = patchline(path(1,:), path(2,:), 'LineWidth', 4, 'EdgeColor', 'g', 'EdgeAlpha', 0.2);
-    
 envRegions = inflate_path(params);
-
-for iRegion = 1:length(envRegions)    
-    envRegions(iRegion).draw_polygon();
-end
 
 [partitions, vPartitions, mapping] = create_partitions(params, envRegions);
 
-figure(params.fig.num);
-for iPartition = 1:length(partitions)
-    partition = cell2mat(partitions(iPartition));
-    plot(partition(2:3,1), partition(2:3,2), 'k');
-    plot(partition(4:5,1), partition(4:5,2), 'k');
+agents = initialize_agents(params, envRegions, partitions, vPartitions, mapping);
+
+time = 0;
+dT = params.sim.timestep;
+
+draw_env(params, envRegions, partitions, agents, 'new');
+draw_agents(params, agents, envRegions, mapping, 'new');
+create_interactive(params, agents, time, dT, 'new');
+drawnow;
+
+tic;
+while time<params.sim.maxtime
+    
+    if ~ishandle(params.fig1handle)
+        return;
+    end
+    
+    if sim_paused()
+        pause(0.1);
+        continue;
+    end
+    
+    if sim_debug() < time
+        sim_debug(Inf);
+        dbstop if warning;
+        warning('pausing for debug at time=%.2f', time);
+    end
+    
+    if toc > dT
+        tic;
+        
+        agents = move_agents(agents, dT, envRegions, mapping, params, time);
+        
+        if sim_agents_to_kill()            
+            for k=sim_agents_to_kill()
+                if find([agents.id] == k)
+                    agents(k).isAlive = 0;
+                    agents(k).position = [1000,0];
+                end
+            end
+            sim_agents_to_kill([])
+        end
+        
+        time = time + dT;
+        
+        draw_env(params, envRegions, partitions, agents, 'update');
+        draw_agents(params, agents, envRegions, mapping, 'update');
+        create_interactive(params, agents, time, dT, 'update');
+        drawnow;
+    end
 end
 
 finish(params)
