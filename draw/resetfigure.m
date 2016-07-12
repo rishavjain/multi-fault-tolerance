@@ -1,6 +1,6 @@
 function [fig1handle] = resetfigure(params)
 
-close all
+close all;
 
 fig1Number = params.fig1.num;
 

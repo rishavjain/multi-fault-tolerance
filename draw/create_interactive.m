@@ -6,7 +6,7 @@ if strcmp(action, 'new')
     panel = uipanel('Parent', params.fig1handle, 'BackgroundColor','white', 'Position', [0.01, 0.01, 0.4, 0.98]);
     
     killButton = uicontrol('Parent', panel, 'Style', 'pushbutton', 'String', 'Kill Agent', ...
-        'Units', 'normalized', 'Position', [0.2, 0.05, 0.1, 0.05], 'Callback', @cb_killagent);
+        'Units', 'normalized', 'Position', [0.426, 0.05, 0.168, 0.05], 'Callback', @cb_killagent);
     
     if sim_paused()
         pauseStr = 'Resume Simulation';
@@ -15,21 +15,21 @@ if strcmp(action, 'new')
     end
     
     resumeButton = uicontrol('Parent', panel, 'Style', 'pushbutton', 'String', pauseStr, ...
-        'Units', 'normalized', 'Position', [0.05, 0.05, 0.1, 0.05], 'Callback', @cb_pausesimulation);
+        'Units', 'normalized', 'Position', [0.05, 0.05, 0.168, 0.05], 'Callback', @cb_pausesimulation);
     
     debugButton = uicontrol('Parent', panel, 'Style', 'pushbutton', 'String', 'Pause to DEBUG', ...
-        'Units', 'normalized', 'Position', [0.35, 0.05, 0.1, 0.05], 'Callback', @cb_debugagent);
+        'Units', 'normalized', 'Position', [0.238, 0.05, 0.168, 0.05], 'Callback', @cb_debugagent);
     
     speedText = uicontrol('Parent', panel, 'Style', 'text', 'BackgroundColor', 'white', ...
-        'Units', 'normalized', 'Position', [0.55, 0.075, 0.3, 0.025], 'String', 'Speed');
+        'Units', 'normalized', 'Position', [0.614, 0.075, 0.336, 0.025], 'String', 'Speed');
     
     speedSlider = uicontrol('Parent', panel, 'Style', 'slider', 'Min', 1, 'Max', 150,'Value', agents(1).speed, ...
-        'Units', 'normalized', 'Position', [0.65, 0.05, 0.3, 0.015], 'Callback', @cb_speedslider);
+        'Units', 'normalized', 'Position', [0.614, 0.05, 0.336, 0.015], 'Callback', @cb_speedslider);
     
     align([killButton, resumeButton, debugButton, speedSlider], 'Distribute', 'None');
     align([speedText, speedSlider], 'Center', 'Distribute');
     
-    timePanel = uipanel('Parent', panel, 'Title', 'Time', 'FontSize', 12, 'BackgroundColor','white', 'Position', [0.05, 0.85, 0.85, 0.15]);
+    timePanel = uipanel('Parent', panel, 'Title', 'Time', 'FontSize', 12, 'BackgroundColor','white', 'Position', [0.05, 0.90, 0.90, 0.10]);
     timeTable = uitable('Parent', timePanel, 'RowName', {'time';'dT'}, 'Data', [time; dT], 'ColumnName', [], ...
         'Units', 'normalized', 'Position', [0.35, 0.05, 0.3, 0.95], 'FontSize', 12);
     
@@ -41,9 +41,9 @@ if strcmp(action, 'new')
             agents(iAgent).note};
     end
     
-    meetingPanel = uipanel('Parent', panel, 'Title', 'Meeting', 'FontSize', 12, 'BackgroundColor','white', 'Position', [0.05, 0.15, 0.85, 0.7]);
-    agentsTable = uitable('Parent', meetingPanel, 'Data', data, 'RowName', [], 'ColumnName', {'Agent'; 'Meet Agent'; 'Time';''}, ...
-        'Units', 'normalized', 'Position', [0.02, 0.02, 0.96, 0.96], 'FontSize', 12, 'ColumnWidth', {80, 80, 80, 360});
+    meetingPanel = uipanel('Parent', panel, 'Title', 'Meeting', 'FontSize', 12, 'BackgroundColor','white', 'Position', [0.05, 0.15, 0.90, 0.75]);
+    agentsTable = uitable('Parent', meetingPanel, 'Data', data, 'RowName', [], 'ColumnName', {'Agent'; 'Meet Agent'; 'Time';sprintf('%200s', '')}, ...
+        'Units', 'normalized', 'Position', [0.02, 0.02, 0.96, 0.96], 'FontSize', 12, 'ColumnWidth', {80, 80, 80, 'auto'});
     
 elseif strcmp(action, 'update')
     set(timeTable, 'Data', [time; dT]);

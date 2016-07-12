@@ -1,4 +1,4 @@
-function cb_pausesimulation(source,callbackdata)
+function cb_pausesimulation(source,~)
 
 if sim_paused()
     sim_paused(0);

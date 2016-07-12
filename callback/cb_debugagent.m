@@ -1,4 +1,4 @@
-function cb_debugagent(source,callbackdata)
+function cb_debugagent(~,~)
 
 input = inputdlg('Debug at time :');
 input = str2double(input);

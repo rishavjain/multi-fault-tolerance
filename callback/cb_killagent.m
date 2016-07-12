@@ -1,15 +1,15 @@
-function cb_killagent(source,callbackdata)
+function cb_killagent(~,~)
 
 input = inputdlg('Agent(s) to kill :');
 
 if isempty(input)
-    return
+    return;
 end
 
 input = str2num(cell2mat(input));
 
 if isempty(input)
-    return
+    return;
 end
 
 sim_agents_to_kill(input);

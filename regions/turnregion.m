@@ -134,7 +134,7 @@ classdef turnregion < region
             D = obj.extraDrawPoint;
             
             l1 = vec_diff(D, s2);
-            l2 = vec_diff(e2, D);
+%             l2 = vec_diff(e2, D);
             
             if Xs <= l1
                 [~, xdir] = vec_diff(D, s2);
@@ -185,7 +185,7 @@ classdef turnregion < region
                 
                 x = mapping(1) + (len2 * tan(theta) / (actualXScale / virtualXScale));
             else
-                [len3, theta3] = vec_diff(s2, s1);
+                [len3, ~] = vec_diff(s2, s1);
                 theta = acos(dot(([x_ y_] - s1), (e2 - s1))/(len1 * len3));
                 
                 x = mapping(1) + ((len2 + len3 - len2*tan(theta)) / (actualXScale / virtualXScale));

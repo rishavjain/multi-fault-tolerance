@@ -44,8 +44,16 @@ while time<params.sim.maxtime
                     agents(k).position = [1000,0];
                 end
             end
-            sim_agents_to_kill([])
+            sim_agents_to_kill([]);
         end
+        
+        speedChanged = sim_speedchanged();
+        if speedChanged
+            for iAgent = 1:length(agents)
+                agents(iAgent).speed = speedChanged;
+            end
+        end
+        clear speedChanged iAgent;
         
         time = time + dT;
         

@@ -1,6 +1,6 @@
 function [ isPaused ] = sim_paused(pause)
 
-persistent isPaused_
+persistent isPaused_;
 
 if isempty(isPaused_)
     isPaused_ = 1;

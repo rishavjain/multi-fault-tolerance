@@ -75,8 +75,8 @@ for iPt = 1:size(path,2)-2
     s1 = e1;
     s2 = e2;
     
-    diagTheta = atan2(pt3(2)-pt1(2), pt3(1)-pt1(1));
-    diagLength = pdist([pt3; pt1], 'euclidean');
+%     diagTheta = atan2(pt3(2)-pt1(2), pt3(1)-pt1(1));
+%     diagLength = pdist([pt3; pt1], 'euclidean');
     
     %     fill([pt1(1), pt3(1), pt3(1), pt1(1), pt1(1)], [pt1(2), pt1(2), pt3(2), pt3(2), pt1(2)], 'g', 'FaceAlpha', 0.1);
     

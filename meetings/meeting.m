@@ -14,8 +14,10 @@ if agents(A1).isAlive && agents(A2).isAlive
     
     logger(params, 1, sprintf('time=%.2f, agents %d and %d meet', time, A1, A2));
     
-    if pdist([agents(A1).vPosition; agents(A2).vPosition]) > (agents(A1).commRange + agents(A2).commRange)
-        logger(params, 3, sprintf('time=%.2f, agents %d and %d missed the meeting point', time, A1, A2));
+    if pdist([agents(A1).vPosition; agents(A2).vPosition]) > 1.05*(agents(A1).commRange + agents(A2).commRange)
+        logger(params, 3, sprintf('time=%.2f, agents %d and %d missed the meeting point, both are alive', time, A1, A2));
+        dbstop if warning;
+        warning('check agents');
     end
     
     %%% --------------------------------------------------------
@@ -73,30 +75,32 @@ if agents(A1).isAlive && agents(A2).isAlive
     agents(j).m1_remTime = agents(j).meetings(1,4) - time;
     agents(j).moveToMeeting = 0;
     %%% ------------------------------------------------------
-else
+end
+
+if ~(agents(A1).isAlive && agents(A2).isAlive)
     if agents(A1).isAlive
         x = A1; y = A2;
     else
         x = A2; y = A1;
-    end
+    end  %%% x is the live agent, y is the dead agent
     
     % fault occur
     logger(params, 2, sprintf('time=%.2f, fault detected (%d) : %d\n', time, x, y));
     
-    %%% if the agent now dead is seeked, remove it
+    %%% if the agent y was the next neighbor seeked in recovery mode
     if ~isempty(find(agents(x).m2_neighbor == y, 1))
         index = find(agents(x).m2_neighbor == y, 1);
         
         agents(x).m2_num = agents(x).m2_num - 1;
-        agents(x).m2_neighbor = agents(x).m2_neighbor( agents(x).m2_neighbor ~= y );
-        agents(x).m2_remTime = agents(x).m2_remTime( agents(x).m2_remTime ~= agents(x).m2_remTime(index) );
+        agents(x).m2_neighbor = [agents(x).m2_neighbor(1:index-1), agents(x).m2_neighbor(index+1:end)];
+        agents(x).m2_remTime = [agents(x).m2_remTime(1:index-1), agents(x).m2_remTime(index+1:end)];
     end
     
     agents(x).meetings = agents(x).meetings(2:end,:);
     
-    agents(x).agents = agents(x).agents( agents(x).agents ~= y ); % remove dead agent from the list
+    agents(x).agents = agents(x).agents( agents(x).agents ~= y ); % remove agent y from the list
     
-    %%% if only one agent is alive
+    %%% if agent x is the only alive agent
     if length(agents(x).agents) == 1
         agents(x).mode = 'single';
         
@@ -110,19 +114,21 @@ else
         
         return;
     end
-    
+        
     newNeighbors = get_neighbors(agents(x).agents, x);
     agents(x).neighbors = newNeighbors;
     
-    if y>x
+    if y > x && newNeighbors(end) > x
         newNeighbor = newNeighbors(end);
-    else
+    elseif y < x && newNeighbors(1) < x
         newNeighbor = newNeighbors(1);
+    else 
+       newNeighbor = [];
     end
     
     agents(x).vLimit(1) = min(agents(x).vLimit(1), agents(y).vLimit(1));
     agents(x).vLimit(2) = max(agents(x).vLimit(2), agents(y).vLimit(2));
-    agents(x).polygon = [agents(x).vLimit(1) 0;
+    agents(x).vPartition = [agents(x).vLimit(1) 0;
             agents(x).vLimit(2) 0 ;
             agents(x).vLimit(2) agents(x).vPartition(3,2);
             agents(x).vLimit(1) agents(x).vPartition(3,2);
@@ -133,9 +139,8 @@ else
         agents(x).moveToMeeting = 0;
     end
     
-    agents(x).mode = 'recovery';
-    
-    if isempty(find(agents(x).m2_neighbor == newNeighbor,1))
+    if ~isempty(newNeighbor) && isempty(find(agents(x).m2_neighbor == newNeighbor,1))
+        agents(x).mode = 'recovery';
         agents(x).m2_num = agents(x).m2_num + 1;
         agents(x).m2_remTime(agents(x).m2_num) = (9 * (agents(x).vLimit(2) - agents(x).vLimit(1)) / agents(x).speed);
         agents(x).m2_neighbor(agents(x).m2_num) = newNeighbor;
@@ -148,7 +153,6 @@ end
 end
 
 function n = get_neighbors(list, x)
-
 pos = find(list==x);
 
 if pos == 1

@@ -1,6 +1,6 @@
 function [ debug_time ] = sim_debug(time)
 
-persistent debug_time_
+persistent debug_time_;
 
 if isempty(debug_time_)
     debug_time_ = Inf;
